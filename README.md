@@ -2,15 +2,16 @@
 
 > A keyboard-first, YAML-driven Nmap terminal interface built with Python and Textual.
 
-PentUI is an early MVP focused on Nmap. Its configuration is stored in
-[`tools/nmap.yaml`](tools/nmap.yaml), so future tool integrations can reuse the
-same interface and command-building architecture.
+PentUI currently supports Nmap, SQLMap, Subfinder, ProjectDiscovery HTTPX, and
+WhatWeb. Their configuration lives in [`tools/`](tools), so future tool
+integrations can reuse the same interface and command-building architecture.
 
 ## Features
 
-- Full-screen Nmap configuration—not a permanent split pane.
+- Full-screen configuration for every supported tool—not a permanent split pane.
 - Reactive, safe command preview built from an argument list rather than a shell command.
-- 111 documented Nmap flags organized into clear groups.
+- 111 documented Nmap flags plus practical, explained option sets for SQLMap,
+  Subfinder, HTTPX, and WhatWeb.
 - Input modal for flags that need values, plus target validation.
 - Asynchronous execution with live output and a mid-scan stop control.
 - Configuration remains available when returning to the tool selection screen.
@@ -53,6 +54,7 @@ pentui/             Application package
   core/             Definitions, command building, validation, execution
   tui/              Textual screens and styles
 tools/nmap.yaml     Nmap flag catalog and descriptions
+tools/*.yaml        Tool definitions for SQLMap, Subfinder, HTTPX, and WhatWeb
 tests/              Automated tests
 bin/pentui          Virtual-environment-aware launcher
 ```
@@ -79,5 +81,6 @@ opening a pull request. For security-sensitive reports, see [SECURITY.md](SECURI
 
 ## Status
 
-This is an MVP. Nmap is the only implemented tool; the architecture is designed
-to support future YAML-defined tools without rewriting the UI.
+This is an MVP. Nmap, SQLMap, Subfinder, HTTPX, and WhatWeb are implemented;
+the architecture is designed to support future YAML-defined tools without
+rewriting the UI.

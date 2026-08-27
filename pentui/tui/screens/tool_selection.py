@@ -14,16 +14,16 @@ class ToolSelectionScreen(Screen[None]):
     BINDINGS = [("q", "quit", "Quit")]
 
     def compose(self) -> ComposeResult:
-        installed = shutil.which(self.app.tool.executable) is not None
-        status = "✓ installed" if installed else "✗ not installed"
         yield Header(show_clock=False)
         with Center():
             with Vertical(id="tool-panel"):
                 yield Label("PENTUI", id="brand")
                 yield Static("SELECT TOOL", classes="section-title")
-                yield Button(f"Nmap    {status}", id="nmap", variant="primary")
-                yield Static("SQLMap    Coming soon", classes="coming-soon")
-                yield Static("FFUF      Coming soon", classes="coming-soon")
+                for name in ("nmap", "sqlmap", "subfinder", "httpx", "whatweb"):
+                    tool = self.app.tools[name]
+                    status = "✓ installed" if shutil.which(tool.executable) else "✗ not installed"
+                    yield Button(f"{tool.display_name}    {status}", id=name)
+                yield Static("FFUF       Coming soon", classes="coming-soon")
                 yield Static("Metasploit Coming soon", classes="coming-soon")
         yield Footer()
 
@@ -31,9 +31,10 @@ class ToolSelectionScreen(Screen[None]):
         self.query_one("#nmap", Button).focus()
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "nmap":
+        if event.button.id in self.app.tools:
+            self.app.select_tool(event.button.id)
             if shutil.which(self.app.tool.executable) is None:
-                self.notify("Nmap is not installed or is not on PATH.", severity="error")
+                self.notify(f"{self.app.tool.display_name} is not installed or is not on PATH.", severity="error")
                 return
             self.app.push_screen(NmapConfigScreen())
 

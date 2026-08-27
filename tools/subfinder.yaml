@@ -1,0 +1,19 @@
+name: subfinder
+display_name: Subfinder
+executable: subfinder
+arguments:
+  - { id: domain, flag: -d, type: string, group: Target, description: "Domain to enumerate passively for subdomains. Use only domains you are authorized to assess.", placeholder: example.com, required: true }
+  - { id: domain_list, flag: -dL, type: filepath, group: Target, description: "Read root domains to enumerate from a file.", placeholder: domains.txt }
+  - { id: sources, flag: -s, type: string, group: Sources, description: "Use only these comma-separated passive sources.", placeholder: crtsh,github }
+  - { id: all_sources, flag: -all, type: boolean, group: Sources, description: "Use all available passive sources; this can be slower and may require configured API keys." }
+  - { id: recursive, flag: -recursive, type: boolean, group: Sources, description: "Use only sources capable of recursive subdomain discovery." }
+  - { id: exclude_sources, flag: -es, type: string, group: Sources, description: "Exclude these comma-separated discovery sources.", placeholder: alienvault,zoomeyeapi }
+  - { id: match, flag: -m, type: string, group: Filters, description: "Keep only subdomains matching a value, comma-separated list, or file.", placeholder: "*.example.com" }
+  - { id: filter, flag: -f, type: string, group: Filters, description: "Remove subdomains matching a value, comma-separated list, or file.", placeholder: dev.example.com }
+  - { id: rate_limit, flag: -rl, type: integer, group: Performance, description: "Limit outbound source requests per second.", placeholder: "10" }
+  - { id: timeout, flag: -timeout, type: integer, group: Performance, description: "Set source request timeout in seconds.", placeholder: "30" }
+  - { id: max_time, flag: -max-time, type: integer, group: Performance, description: "Stop enumeration after this many minutes.", placeholder: "10" }
+  - { id: output, flag: -o, type: filepath, group: Output, description: "Write discovered subdomains to this file.", placeholder: subdomains.txt }
+  - { id: json, flag: -json, type: boolean, group: Output, description: "Write JSON Lines output instead of plain hostnames." }
+  - { id: silent, flag: -silent, type: boolean, group: Output, description: "Show only discovered subdomains in terminal output." }
+  - { id: verbose, flag: -v, type: boolean, group: Output, description: "Show verbose discovery information." }

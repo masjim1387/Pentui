@@ -35,7 +35,7 @@ class NmapConfigScreen(Screen[None]):
         tool = self.app.tool
         yield Header(show_clock=False)
         with Vertical(id="config-root"):
-            yield Label("NMAP CONFIGURATION", id="screen-title")
+            yield Label(f"{tool.display_name.upper()} CONFIGURATION", id="screen-title")
             yield Static("COMMAND", classes="section-title")
             yield Static("", id="command-preview")
             with VerticalScroll(id="arguments"):
@@ -47,12 +47,14 @@ class NmapConfigScreen(Screen[None]):
                     yield Label(group.upper(), classes="group-title")
                     for argument in arguments:
                         yield ArgumentButton(argument, self.app.command_state.is_selected(argument))
-                yield Label("TARGET", classes="group-title")
-                yield Input(
-                    value=self.app.command_state.targets[0] if self.app.command_state.targets else "",
-                    placeholder="Host, IP, domain, or network range",
-                    id="target-input",
-                )
+                target_arguments = [arg for arg in tool.arguments if arg.type == "target"]
+                if target_arguments:
+                    yield Label("TARGET", classes="group-title")
+                    yield Input(
+                        value=self.app.command_state.targets[0] if self.app.command_state.targets else "",
+                        placeholder=target_arguments[0].placeholder or "Host, IP, domain, or network range",
+                        id="target-input",
+                    )
         yield Footer()
 
     def on_mount(self) -> None:
@@ -103,9 +105,9 @@ class NmapConfigScreen(Screen[None]):
     def action_run(self) -> None:
         errors = validate(self.app.tool, self.app.command_state)
         if errors:
-            self.notify("Cannot run Nmap: " + " ".join(errors), severity="error", timeout=8)
+            self.notify(f"Cannot run {self.app.tool.display_name}: " + " ".join(errors), severity="error", timeout=8)
             return
-        self.app.push_screen(ExecutionScreen(build_command(self.app.tool, self.app.command_state)))
+        self.app.push_screen(ExecutionScreen(build_command(self.app.tool, self.app.command_state), self.app.tool.display_name))
 
     def action_back(self) -> None:
         self.app.pop_screen()

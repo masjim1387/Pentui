@@ -1,0 +1,31 @@
+name: sqlmap
+display_name: SQLMap
+executable: sqlmap
+arguments:
+  - { id: url, flag: -u, type: string, group: Target, description: "Target URL containing a testable parameter. Use only with explicit authorization.", placeholder: "https://example.test/item?id=1", required: true }
+  - { id: request_file, flag: -r, type: filepath, group: Target, description: "Load a complete HTTP request from a file, such as an exported Burp request.", placeholder: request.txt }
+  - { id: data, flag: --data, type: string, group: Request, description: "Send this POST body with the request.", placeholder: "id=1&name=test" }
+  - { id: method, flag: --method, type: string, group: Request, description: "Use this HTTP method instead of sqlmap's default.", placeholder: POST }
+  - { id: cookie, flag: --cookie, type: string, group: Request, description: "Supply an HTTP Cookie header value.", placeholder: "session=..." }
+  - { id: user_agent, flag: --user-agent, type: string, group: Request, description: "Set the HTTP User-Agent header.", placeholder: "Mozilla/5.0" }
+  - { id: referer, flag: --referer, type: string, group: Request, description: "Set the HTTP Referer header.", placeholder: "https://example.test/" }
+  - { id: headers, flag: --headers, type: string, group: Request, description: "Add extra HTTP headers separated by newlines.", placeholder: "X-Test: value" }
+  - { id: random_agent, flag: --random-agent, type: boolean, group: Request, description: "Choose a random User-Agent value from sqlmap's bundled list." }
+  - { id: timeout, flag: --timeout, type: integer, group: Request, description: "Set the HTTP timeout in seconds.", placeholder: "30" }
+  - { id: retries, flag: --retries, type: integer, group: Request, description: "Retry failed connections this many times.", placeholder: "3" }
+  - { id: proxy, flag: --proxy, type: string, group: Request, description: "Route requests through an HTTP proxy.", placeholder: "http://127.0.0.1:8080" }
+  - { id: level, flag: --level, type: enum, group: Detection, description: "Set test depth from 1 (default) to 5 (most extensive).", choices: ["1", "2", "3", "4", "5"], placeholder: "1" }
+  - { id: risk, flag: --risk, type: enum, group: Detection, description: "Set payload risk from 1 (safe) to 3 (higher impact).", choices: ["1", "2", "3"], placeholder: "1" }
+  - { id: technique, flag: --technique, type: string, group: Detection, description: "Restrict techniques: B Boolean, E Error, U Union, S Stacked, T Time, Q Inline.", placeholder: BEUSTQ }
+  - { id: dbms, flag: --dbms, type: string, group: Detection, description: "Force a known back-end DBMS instead of automatic fingerprinting.", placeholder: MySQL }
+  - { id: batch, flag: --batch, type: boolean, group: General, description: "Use default answers for prompts; suitable for non-interactive runs." }
+  - { id: verbosity, flag: -v, type: enum, group: General, description: "Set console verbosity from 0 to 6.", choices: ["0", "1", "2", "3", "4", "5", "6"], placeholder: "1" }
+  - { id: flush_session, flag: --flush-session, type: boolean, group: General, description: "Clear cached session data for the selected target before running." }
+  - { id: output_dir, flag: --output-dir, type: filepath, group: General, description: "Write sqlmap output and session files under this directory.", placeholder: output }
+  - { id: current_db, flag: --current-db, type: boolean, group: Enumeration, description: "Retrieve the current database name after a confirmed injection." }
+  - { id: current_user, flag: --current-user, type: boolean, group: Enumeration, description: "Retrieve the current DBMS user after a confirmed injection." }
+  - { id: dbs, flag: --dbs, type: boolean, group: Enumeration, description: "Enumerate accessible database names after a confirmed injection." }
+  - { id: tables, flag: --tables, type: boolean, group: Enumeration, description: "Enumerate tables in the selected database after a confirmed injection." }
+  - { id: columns, flag: --columns, type: boolean, group: Enumeration, description: "Enumerate columns in the selected table after a confirmed injection." }
+  - { id: database, flag: -D, type: string, group: Enumeration, description: "Select a database for table or column enumeration.", placeholder: appdb }
+  - { id: table, flag: -T, type: string, group: Enumeration, description: "Select a table for column enumeration.", placeholder: users }

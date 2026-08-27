@@ -7,3 +7,10 @@ def test_nmap_definition_loads() -> None:
     assert tool.executable == "nmap"
     assert tool.argument("ports").requires_value
     assert tool.argument("target").required
+
+
+def test_sqlmap_definition_loads() -> None:
+    nmap = load_tool_definition()
+    sqlmap = load_tool_definition(nmap.source_path.parent / "sqlmap.yaml")
+    assert sqlmap.name == "sqlmap"
+    assert sqlmap.argument("url").required

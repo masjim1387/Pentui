@@ -1,0 +1,18 @@
+name: whatweb
+display_name: WhatWeb
+executable: whatweb
+arguments:
+  - { id: target, type: target, group: Target, description: "URL, hostname, IP address, or authorized network range to identify.", placeholder: https://example.com, required: true }
+  - { id: input_file, flag: -i, type: filepath, group: Target, description: "Read URLs or hostnames from a file.", placeholder: targets.txt }
+  - { id: url_prefix, flag: --url-prefix, type: string, group: Target Modification, description: "Add this prefix to each target read from an input file.", placeholder: https:// }
+  - { id: url_suffix, flag: --url-suffix, type: string, group: Target Modification, description: "Add this suffix to each target read from an input file.", placeholder: /robots.txt }
+  - { id: aggression, flag: -a, type: enum, group: Identification, description: "Set aggression: 1 stealthy, 3 aggressive, or 4 heavy testing.", choices: ["1", "2", "3", "4"], placeholder: "1" }
+  - { id: plugins, flag: -p, type: string, group: Identification, description: "Run only selected WhatWeb plugins.", placeholder: WordPress,HTTPServer }
+  - { id: verbose, flag: -v, type: boolean, group: Identification, description: "Include detailed plugin descriptions in results." }
+  - { id: max_threads, flag: -t, type: integer, group: Performance, description: "Set simultaneous request threads.", placeholder: "25" }
+  - { id: open_timeout, flag: --open-timeout, type: integer, group: Performance, description: "Set connection timeout in seconds.", placeholder: "15" }
+  - { id: read_timeout, flag: --read-timeout, type: integer, group: Performance, description: "Set read timeout in seconds.", placeholder: "30" }
+  - { id: wait, flag: --wait, type: integer, group: Performance, description: "Wait this many seconds between connections.", placeholder: "1" }
+  - { id: no_errors, flag: --no-errors, type: boolean, group: Output, description: "Suppress connection error messages." }
+  - { id: log_brief, flag: --log-brief, type: filepath, group: Output, description: "Write brief results to this file.", placeholder: whatweb.txt }
+  - { id: log_xml, flag: --log-xml, type: filepath, group: Output, description: "Write XML results to this file.", placeholder: whatweb.xml }

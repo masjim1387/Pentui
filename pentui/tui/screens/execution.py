@@ -13,15 +13,16 @@ from pentui.core.executor import run_command
 class ExecutionScreen(Screen[None]):
     BINDINGS = [("escape", "back", "Back"), ("q", "stop", "Stop")]
 
-    def __init__(self, command: list[str]) -> None:
+    def __init__(self, command: list[str], tool_name: str = "Nmap") -> None:
         super().__init__()
         self.command = command
+        self.tool_name = tool_name
         self.output_worker = None
 
     def compose(self) -> ComposeResult:
         yield Header(show_clock=False)
         with Vertical(id="execution-root"):
-            yield Label("NMAP — RUNNING", id="screen-title")
+            yield Label(f"{self.tool_name.upper()} — RUNNING", id="screen-title")
             yield Static("$ " + display_command(self.command), id="run-command")
             yield RichLog(id="output", wrap=True, highlight=False, markup=False)
             with Horizontal(id="execution-actions"):

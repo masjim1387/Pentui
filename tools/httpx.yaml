@@ -1,0 +1,27 @@
+name: httpx
+display_name: HTTPX
+executable: httpx
+arguments:
+  - { id: target_url, flag: -u, type: string, group: Target, description: "HTTP or HTTPS URL/host to probe. Use only assets you are authorized to assess.", placeholder: https://example.com, required: true }
+  - { id: target_list, flag: -l, type: filepath, group: Target, description: "Read hosts or URLs to probe from a file.", placeholder: hosts.txt }
+  - { id: no_fallback, flag: -nf, type: boolean, group: Target, description: "Probe and show both HTTP and HTTPS instead of falling back automatically." }
+  - { id: status_code, flag: -sc, type: boolean, group: Probes, description: "Display HTTP response status codes." }
+  - { id: content_length, flag: -cl, type: boolean, group: Probes, description: "Display response content lengths." }
+  - { id: content_type, flag: -ct, type: boolean, group: Probes, description: "Display response Content-Type headers." }
+  - { id: title, flag: -title, type: boolean, group: Probes, description: "Extract and display HTML page titles." }
+  - { id: web_server, flag: -server, type: boolean, group: Probes, description: "Display HTTP Server header values." }
+  - { id: tech_detect, flag: -td, type: boolean, group: Probes, description: "Detect web technologies from response fingerprints." }
+  - { id: follow_redirects, flag: -fr, type: boolean, group: Request, description: "Follow HTTP redirects." }
+  - { id: max_redirects, flag: -maxr, type: integer, group: Request, description: "Limit redirects followed per target.", placeholder: "10" }
+  - { id: method, flag: -x, type: string, group: Request, description: "Use this HTTP method, or 'all' to probe supported methods.", placeholder: GET }
+  - { id: headers, flag: -H, type: string, group: Request, description: "Add a custom HTTP header.", placeholder: "Authorization: Bearer token" }
+  - { id: proxy, flag: -proxy, type: string, group: Request, description: "Use an HTTP or SOCKS proxy for requests.", placeholder: http://127.0.0.1:8080 }
+  - { id: ports, flag: -p, type: string, group: Request, description: "Probe custom ports, optionally with schemes.", placeholder: "80,443,https:8443" }
+  - { id: paths, flag: -path, type: string, group: Request, description: "Probe a path or a file containing paths.", placeholder: /health }
+  - { id: threads, flag: -threads, type: integer, group: Performance, description: "Set concurrent probe threads.", placeholder: "25" }
+  - { id: rate_limit, flag: -rl, type: integer, group: Performance, description: "Limit requests per second.", placeholder: "150" }
+  - { id: timeout, flag: -timeout, type: integer, group: Performance, description: "Set request timeout in seconds.", placeholder: "10" }
+  - { id: retries, flag: -retries, type: integer, group: Performance, description: "Set retries for failed requests.", placeholder: "1" }
+  - { id: json, flag: -json, type: boolean, group: Output, description: "Write JSON Lines output." }
+  - { id: output, flag: -o, type: filepath, group: Output, description: "Write output to this file.", placeholder: httpx.txt }
+  - { id: silent, flag: -silent, type: boolean, group: Output, description: "Show only result lines." }
