@@ -1,0 +1,124 @@
+name: nmap
+display_name: Nmap
+executable: nmap
+arguments:
+  # Target input
+  - { id: input_list, flag: -iL, type: filepath, group: Target Specification, description: "Read targets from a file; each entry may be a hostname, IP, CIDR range, or comment.", placeholder: targets.txt }
+  - { id: random_targets, flag: -iR, type: integer, group: Target Specification, description: "Generate this many random public target addresses. Scan only systems you are authorized to assess.", placeholder: "10" }
+  - { id: exclude_targets, flag: --exclude, type: string, group: Target Specification, description: "Exclude a comma-separated list of hosts or networks.", placeholder: "192.168.1.1,192.168.1.0/28" }
+  - { id: exclude_file, flag: --excludefile, type: filepath, group: Target Specification, description: "Read hosts and networks to exclude from a file.", placeholder: excluded.txt }
+  - { id: ipv6, flag: -6, type: boolean, group: Target Specification, description: "Use IPv6 scanning; targets must be IPv6 addresses or names that resolve to them." }
+  - { id: resolve_all, flag: --resolve-all, type: boolean, group: Target Specification, description: "Scan every address returned for a hostname with multiple DNS answers." }
+  # Host discovery
+  - { id: list_scan, flag: -sL, type: boolean, group: Host Discovery, description: "List targets and resolve names without sending port-scan probes." }
+  - { id: no_ping, flag: -Pn, type: boolean, group: Host Discovery, description: "Skip host discovery and treat each supplied target as online; useful when discovery probes are filtered." }
+  - { id: host_discovery, flag: -sn, type: boolean, group: Host Discovery, description: "Run host discovery only; do not scan ports." }
+  - { id: tcp_syn_ping, flag: -PS, type: string, group: Host Discovery, description: "Discover hosts with TCP SYN probes to these ports (default: 80).", placeholder: "80,443" }
+  - { id: tcp_ack_ping, flag: -PA, type: string, group: Host Discovery, description: "Discover hosts with TCP ACK probes to these ports (default: 80).", placeholder: "80,443" }
+  - { id: udp_ping, flag: -PU, type: string, group: Host Discovery, description: "Discover hosts with UDP probes to these ports (default: 40125).", placeholder: "53,161" }
+  - { id: sctp_ping, flag: -PY, type: string, group: Host Discovery, description: "Discover hosts with SCTP INIT probes to these ports.", placeholder: "80" }
+  - { id: icmp_echo, flag: -PE, type: boolean, group: Host Discovery, description: "Use ICMP echo-request probes during host discovery." }
+  - { id: icmp_timestamp, flag: -PP, type: boolean, group: Host Discovery, description: "Use ICMP timestamp-request probes during host discovery." }
+  - { id: icmp_netmask, flag: -PM, type: boolean, group: Host Discovery, description: "Use ICMP address-mask-request probes during host discovery." }
+  - { id: ip_protocol_ping, flag: -PO, type: string, group: Host Discovery, description: "Discover hosts with IP protocol probes.", placeholder: "1,6,17" }
+  - { id: no_dns, flag: -n, type: boolean, group: Host Discovery, description: "Never perform DNS resolution; reduces scan time and DNS traffic." }
+  - { id: always_dns, flag: -R, type: boolean, group: Host Discovery, description: "Always resolve DNS names for responsive targets." }
+  - { id: dns_servers, flag: --dns-servers, type: string, group: Host Discovery, description: "Use these comma-separated DNS servers instead of the system resolver.", placeholder: "1.1.1.1,8.8.8.8" }
+  - { id: system_dns, flag: --system-dns, type: boolean, group: Host Discovery, description: "Use the system resolver instead of Nmap's parallel DNS resolver." }
+  # Scan methods
+  - { id: syn_scan, flag: -sS, type: boolean, group: Scan Techniques, description: "TCP SYN (half-open) scan; sends SYN probes and normally needs raw-packet privileges." }
+  - { id: tcp_connect, flag: -sT, type: boolean, group: Scan Techniques, description: "TCP connect scan; completes a normal connection and works without raw-packet privileges." }
+  - { id: udp_scan, flag: -sU, type: boolean, group: Scan Techniques, description: "UDP scan; identifies UDP services but may be slow because open ports often do not reply." }
+  - { id: ack_scan, flag: -sA, type: boolean, group: Scan Techniques, description: "TCP ACK scan; maps filtering rules but does not determine whether a port is open." }
+  - { id: window_scan, flag: -sW, type: boolean, group: Scan Techniques, description: "TCP Window scan; uses TCP window sizes on systems where they reveal port state." }
+  - { id: maimon_scan, flag: -sM, type: boolean, group: Scan Techniques, description: "TCP Maimon scan using FIN/ACK probes; results depend on the target TCP stack." }
+  - { id: null_scan, flag: -sN, type: boolean, group: Scan Techniques, description: "TCP Null scan; sends no TCP flags and is useful only against some implementations." }
+  - { id: fin_scan, flag: -sF, type: boolean, group: Scan Techniques, description: "TCP FIN scan; uses FIN-only probes to differentiate responses." }
+  - { id: xmas_scan, flag: -sX, type: boolean, group: Scan Techniques, description: "TCP Xmas scan; sends FIN, PSH, and URG flags." }
+  - { id: custom_flags, flag: --scanflags, type: string, group: Scan Techniques, description: "Set custom TCP flags for a compatible TCP scan.", placeholder: SYNFIN }
+  - { id: idle_scan, flag: -sI, type: string, group: Scan Techniques, description: "Idle scan through a compatible zombie host.", placeholder: "zombie.example:80" }
+  - { id: sctp_init, flag: -sY, type: boolean, group: Scan Techniques, description: "SCTP INIT scan for SCTP services." }
+  - { id: sctp_cookie, flag: -sZ, type: boolean, group: Scan Techniques, description: "SCTP COOKIE-ECHO scan to distinguish SCTP filtering behavior." }
+  - { id: ip_protocol_scan, flag: -sO, type: boolean, group: Scan Techniques, description: "IP protocol scan; identifies supported IP protocols rather than TCP or UDP ports." }
+  - { id: ftp_bounce, flag: -b, type: string, group: Scan Techniques, description: "FTP bounce scan through an FTP server that permits proxy connections.", placeholder: "ftp.example:21" }
+  # Ports
+  - { id: ports, flag: -p, type: string, group: Port Specification, description: "Scan only these ports. Use numbers, ranges, protocol prefixes, or '-' for all ports (for example: 80,443 or 1-1024).", placeholder: "80,443" }
+  - { id: exclude_ports, flag: --exclude-ports, type: string, group: Port Specification, description: "Remove these ports from the selected scan set.", placeholder: "25,135,445" }
+  - { id: fast_scan, flag: -F, type: boolean, group: Port Specification, description: "Scan common ports from Nmap's services file instead of the default top 1,000." }
+  - { id: sequential_ports, flag: -r, type: boolean, group: Port Specification, description: "Scan ports in numeric order instead of Nmap's randomized order." }
+  - { id: port_ratio, flag: --port-ratio, type: string, group: Port Specification, description: "Scan services whose frequency is at least this ratio.", placeholder: "0.05" }
+  - { id: top_ports, flag: --top-ports, type: integer, group: Port Specification, description: "Scan this number of most common ports from Nmap's services database.", placeholder: "100" }
+  # Detection and scripts
+  - { id: service_version, flag: -sV, type: boolean, group: Service / Version Detection, description: "Probe open ports to identify service names, products, versions, and sometimes CPE details." }
+  - { id: version_intensity, flag: --version-intensity, type: integer, group: Service / Version Detection, description: "Set version-probe intensity from 0 (light) through 9 (all probes).", placeholder: "7" }
+  - { id: version_light, flag: --version-light, type: boolean, group: Service / Version Detection, description: "Use light version detection (equivalent to intensity 2)." }
+  - { id: version_all, flag: --version-all, type: boolean, group: Service / Version Detection, description: "Try every service-version probe (equivalent to intensity 9)." }
+  - { id: version_trace, flag: --version-trace, type: boolean, group: Service / Version Detection, description: "Print detailed service-version probing activity for troubleshooting." }
+  - { id: os_detection, flag: -O, type: boolean, group: OS Detection, description: "Identify the target operating system by comparing network-stack responses with Nmap fingerprints." }
+  - { id: osscan_limit, flag: --osscan-limit, type: boolean, group: OS Detection, description: "Run OS detection only when at least one open and one closed TCP port are found." }
+  - { id: osscan_guess, flag: --osscan-guess, type: boolean, group: OS Detection, description: "Show more aggressive OS guesses when no exact fingerprint matches." }
+  - { id: default_scripts, flag: -sC, type: boolean, group: NSE Scripting, description: "Run the default NSE script set. Review scripts and use only with authorization." }
+  - { id: scripts, flag: --script, type: string, group: NSE Scripting, description: "Run named NSE scripts, categories, directories, or expressions.", placeholder: "default,safe" }
+  - { id: script_args, flag: --script-args, type: string, group: NSE Scripting, description: "Pass comma-separated key=value arguments to selected NSE scripts.", placeholder: "user=guest" }
+  - { id: script_args_file, flag: --script-args-file, type: filepath, group: NSE Scripting, description: "Read NSE script arguments from a file.", placeholder: script-args.txt }
+  - { id: script_trace, flag: --script-trace, type: boolean, group: NSE Scripting, description: "Show data sent and received by NSE scripts for debugging." }
+  - { id: script_updatedb, flag: --script-updatedb, type: boolean, group: NSE Scripting, description: "Refresh the NSE script database and exit." }
+  # Timing
+  - { id: timing, flag: -T, type: enum, group: Timing and Performance, description: "Timing template: 0 paranoid, 1 sneaky, 2 polite, 3 normal, 4 aggressive, 5 insane.", choices: ["0", "1", "2", "3", "4", "5"], placeholder: "3" }
+  - { id: min_hostgroup, flag: --min-hostgroup, type: integer, group: Timing and Performance, description: "Keep at least this many hosts in parallel during a scan phase.", placeholder: "10" }
+  - { id: max_hostgroup, flag: --max-hostgroup, type: integer, group: Timing and Performance, description: "Limit hosts scanned in parallel during a scan phase.", placeholder: "64" }
+  - { id: min_parallelism, flag: --min-parallelism, type: integer, group: Timing and Performance, description: "Maintain at least this many outstanding probes.", placeholder: "10" }
+  - { id: max_parallelism, flag: --max-parallelism, type: integer, group: Timing and Performance, description: "Cap outstanding probes.", placeholder: "100" }
+  - { id: min_rtt_timeout, flag: --min-rtt-timeout, type: string, group: Timing and Performance, description: "Set the minimum probe timeout (for example, 100ms or 1s).", placeholder: 100ms }
+  - { id: max_rtt_timeout, flag: --max-rtt-timeout, type: string, group: Timing and Performance, description: "Set the maximum probe timeout.", placeholder: 1s }
+  - { id: initial_rtt_timeout, flag: --initial-rtt-timeout, type: string, group: Timing and Performance, description: "Set the initial timeout before Nmap adapts to observed latency.", placeholder: 500ms }
+  - { id: max_retries, flag: --max-retries, type: integer, group: Timing and Performance, description: "Limit probe retransmissions before Nmap gives up on a response.", placeholder: "2" }
+  - { id: host_timeout, flag: --host-timeout, type: string, group: Timing and Performance, description: "Stop scanning a host after this total time.", placeholder: 5m }
+  - { id: scan_delay, flag: --scan-delay, type: string, group: Timing and Performance, description: "Wait at least this long between probes to a host.", placeholder: 100ms }
+  - { id: max_scan_delay, flag: --max-scan-delay, type: string, group: Timing and Performance, description: "Limit Nmap's adaptive delay between probes.", placeholder: 1s }
+  - { id: min_rate, flag: --min-rate, type: integer, group: Timing and Performance, description: "Send probes no slower than this approximate rate per second.", placeholder: "100" }
+  - { id: max_rate, flag: --max-rate, type: integer, group: Timing and Performance, description: "Do not send probes faster than this approximate rate per second.", placeholder: "1000" }
+  # Evasion
+  - { id: fragment, flag: -f, type: boolean, group: Firewall / IDS Evasion, description: "Fragment IP packets. This may reduce reliability; use only on authorized assessments." }
+  - { id: mtu, flag: --mtu, type: integer, group: Firewall / IDS Evasion, description: "Set the packet-fragmentation MTU; it must be a multiple of 8.", placeholder: "24" }
+  - { id: decoys, flag: -D, type: string, group: Firewall / IDS Evasion, description: "Send decoy probes from listed addresses, optionally including ME for your real address.", placeholder: "RND:5,ME" }
+  - { id: spoof_source, flag: -S, type: string, group: Firewall / IDS Evasion, description: "Spoof the source IP. Replies will not normally return without suitable routing.", placeholder: 192.0.2.10 }
+  - { id: interface, flag: -e, type: string, group: Firewall / IDS Evasion, description: "Use this network interface and bypass automatic route selection.", placeholder: eth0 }
+  - { id: source_port, flag: --source-port, type: integer, group: Firewall / IDS Evasion, description: "Use this source port for probes; -g is equivalent.", placeholder: "53" }
+  - { id: proxies, flag: --proxies, type: string, group: Firewall / IDS Evasion, description: "Relay applicable TCP connections through an HTTP or SOCKS4 proxy chain.", placeholder: "http://proxy:8080" }
+  - { id: hex_data, flag: --data, type: string, group: Firewall / IDS Evasion, description: "Append hexadecimal payload data to sent packets.", placeholder: DEADBEEF }
+  - { id: string_data, flag: --data-string, type: string, group: Firewall / IDS Evasion, description: "Append a literal string payload to sent packets.", placeholder: test }
+  - { id: data_length, flag: --data-length, type: integer, group: Firewall / IDS Evasion, description: "Append this many random payload bytes to probes.", placeholder: "16" }
+  - { id: ip_options, flag: --ip-options, type: string, group: Firewall / IDS Evasion, description: "Send packets with the specified IPv4 options string.", placeholder: R }
+  - { id: ttl, flag: --ttl, type: integer, group: Firewall / IDS Evasion, description: "Set the IPv4 time-to-live for probes.", placeholder: "64" }
+  - { id: spoof_mac, flag: --spoof-mac, type: string, group: Firewall / IDS Evasion, description: "Spoof the source MAC with a MAC, vendor, 0, or random.", placeholder: "0" }
+  - { id: badsum, flag: --badsum, type: boolean, group: Firewall / IDS Evasion, description: "Use invalid checksums to test how targets handle malformed probes." }
+  - { id: defeat_rst_ratelimit, flag: --defeat-rst-ratelimit, type: boolean, group: Firewall / IDS Evasion, description: "Treat rate-limited RST replies as closed ports; faster but less accurate." }
+  - { id: disable_arp_ping, flag: --disable-arp-ping, type: boolean, group: Firewall / IDS Evasion, description: "Disable ARP or Neighbor Discovery probes on local Ethernet networks." }
+  # Output and misc
+  - { id: normal_output, flag: -oN, type: filepath, group: Output, description: "Write human-readable normal output to this file.", placeholder: scan.nmap }
+  - { id: xml_output, flag: -oX, type: filepath, group: Output, description: "Write XML output for tools and report processors to this file.", placeholder: scan.xml }
+  - { id: grepable_output, flag: -oG, type: filepath, group: Output, description: "Write legacy grepable output to this file; XML is preferred for new automation.", placeholder: scan.gnmap }
+  - { id: script_kiddie_output, flag: -oS, type: filepath, group: Output, description: "Write legacy 'script kiddie' output to this file.", placeholder: scan.skid }
+  - { id: all_output, flag: -oA, type: filepath, group: Output, description: "Write normal, XML, and grepable outputs using this basename.", placeholder: scan }
+  - { id: append_output, flag: --append-output, type: boolean, group: Output, description: "Append output files instead of overwriting them." }
+  - { id: resume, flag: --resume, type: filepath, group: Output, description: "Resume a scan from an interrupted normal or grepable output file.", placeholder: scan.nmap }
+  - { id: verbosity, flag: -v, type: boolean, group: Output, description: "Increase terminal progress detail by one verbosity level." }
+  - { id: debugging, flag: -d, type: boolean, group: Output, description: "Increase terminal debugging detail by one level." }
+  - { id: reason, flag: --reason, type: boolean, group: Output, description: "Show why Nmap assigned each port and host state." }
+  - { id: open_only, flag: --open, type: boolean, group: Output, description: "Show only open, open|filtered, or unfiltered ports." }
+  - { id: packet_trace, flag: --packet-trace, type: boolean, group: Output, description: "Show every packet sent and received for troubleshooting." }
+  - { id: iflist, flag: --iflist, type: boolean, group: Output, description: "Print interfaces and routing information, then exit." }
+  - { id: aggressive, flag: -A, type: boolean, group: Miscellaneous, description: "Enable OS detection, version detection, default scripts, and traceroute; a broad and potentially intrusive profile." }
+  - { id: traceroute, flag: --traceroute, type: boolean, group: Miscellaneous, description: "Trace the network path to each host after scanning." }
+  - { id: datadir, flag: --datadir, type: filepath, group: Miscellaneous, description: "Use this directory when locating Nmap data files.", placeholder: /usr/share/nmap }
+  - { id: servicedb, flag: --servicedb, type: filepath, group: Miscellaneous, description: "Use a custom nmap-services database file.", placeholder: nmap-services }
+  - { id: versiondb, flag: --versiondb, type: filepath, group: Miscellaneous, description: "Use a custom nmap-service-probes database file.", placeholder: nmap-service-probes }
+  - { id: send_eth, flag: --send-eth, type: boolean, group: Miscellaneous, description: "Send packets at raw Ethernet rather than IP layer when possible." }
+  - { id: send_ip, flag: --send-ip, type: boolean, group: Miscellaneous, description: "Send packets through raw IP sockets rather than Ethernet frames when possible." }
+  - { id: privileged, flag: --privileged, type: boolean, group: Miscellaneous, description: "Assume raw-socket and packet-capture privileges are available." }
+  - { id: unprivileged, flag: --unprivileged, type: boolean, group: Miscellaneous, description: "Assume raw-socket and packet-capture privileges are unavailable." }
+  - { id: release_memory, flag: --release-memory, type: boolean, group: Miscellaneous, description: "Release allocated memory before Nmap exits; mainly useful for Nmap debugging." }
+  - { id: nmap_version, flag: --version, type: boolean, group: Miscellaneous, description: "Print Nmap version information and exit." }
+  - { id: nmap_help, flag: --help, type: boolean, group: Miscellaneous, description: "Print Nmap's command-line help summary and exit." }
+  - { id: target, type: target, group: Target, description: "Host, IP address, hostname, IPv6 address, CIDR network, or octet range to scan.", placeholder: 192.168.1.10, required: true }
