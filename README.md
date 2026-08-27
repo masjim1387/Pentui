@@ -1,8 +1,21 @@
 # PentUI
 
-PentUI is a small, keyboard-first Textual launcher for security tools. This MVP implements only Nmap and keeps the tool configuration in `tools/nmap.yaml` so later tools can use the same UI/core architecture.
+> A keyboard-first, YAML-driven Nmap terminal interface built with Python and Textual.
 
-## Install and run
+PentUI is an early MVP focused on Nmap. Its configuration is stored in
+[`tools/nmap.yaml`](tools/nmap.yaml), so future tool integrations can reuse the
+same interface and command-building architecture.
+
+## Features
+
+- Full-screen Nmap configuration—not a permanent split pane.
+- Reactive, safe command preview built from an argument list rather than a shell command.
+- 111 documented Nmap flags organized into clear groups.
+- Input modal for flags that need values, plus target validation.
+- Asynchronous execution with live output and a mid-scan stop control.
+- Configuration remains available when returning to the tool selection screen.
+
+## Quick start
 
 ```bash
 python -m venv .venv
@@ -16,6 +29,8 @@ the project's `.venv` automatically (and creates it with the required packages
 if it is missing).
 
 Nmap itself must be installed separately and available on `PATH`. PentUI detects it at startup and will not execute a scan if it is unavailable.
+
+> Only scan systems and networks you own or have explicit permission to assess.
 
 ## Controls
 
@@ -31,6 +46,17 @@ current selections and target in place.
 
 Enter a target in the dedicated target field. The command preview updates immediately for flags, parameter values, and target edits.
 
+## Project layout
+
+```text
+pentui/             Application package
+  core/             Definitions, command building, validation, execution
+  tui/              Textual screens and styles
+tools/nmap.yaml     Nmap flag catalog and descriptions
+tests/              Automated tests
+bin/pentui          Virtual-environment-aware launcher
+```
+
 ## Test
 
 ```bash
@@ -45,3 +71,13 @@ python -m pytest
 - `tests/` verifies command building, validation, and YAML loading.
 
 Commands are executed as an argument list with `asyncio.create_subprocess_exec`, never through a shell string.
+
+## Contributing
+
+Contributions are welcome. Please read [CONTRIBUTING.md](CONTRIBUTING.md) before
+opening a pull request. For security-sensitive reports, see [SECURITY.md](SECURITY.md).
+
+## Status
+
+This is an MVP. Nmap is the only implemented tool; the architecture is designed
+to support future YAML-defined tools without rewriting the UI.
