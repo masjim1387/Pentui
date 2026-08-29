@@ -12,17 +12,31 @@ from pentui.tui.screens.nmap_config import NmapConfigScreen
 
 class ToolSelectionScreen(Screen[None]):
     BINDINGS = [("q", "quit", "Quit")]
+    TOOL_SUMMARIES = {
+        "nmap": "Network discovery and service scanning",
+        "sqlmap": "Web request injection testing",
+        "subfinder": "Passive subdomain discovery",
+        "httpx": "HTTP service probing",
+        "whatweb": "Web technology identification",
+        "ffuf": "Wordlist-driven content discovery",
+    }
 
     def compose(self) -> ComposeResult:
         yield Header(show_clock=False)
         with Center():
             with Vertical(id="tool-panel"):
                 yield Label("PENTUI", id="brand")
-                yield Static("SELECT TOOL", classes="section-title")
+                yield Static("AUTHORIZED ASSESSMENT CONSOLE", id="brand-subtitle")
+                yield Static("────────────────────────────────────────────────────────────────", id="tool-rule")
+                yield Static("TOOLS  /  SELECT ONE TO CONFIGURE", id="tool-heading")
                 for name in ("nmap", "sqlmap", "subfinder", "httpx", "whatweb", "ffuf"):
                     tool = self.app.tools[name]
-                    status = "✓ installed" if shutil.which(tool.executable) else "✗ not installed"
-                    yield Button(f"{tool.display_name}    {status}", id=name)
+                    installed = shutil.which(tool.executable) is not None
+                    status = "READY" if installed else "MISSING"
+                    label = f"{tool.display_name:<12} {self.TOOL_SUMMARIES[name]:<39} {status}"
+                    state_class = "installed" if installed else "unavailable"
+                    yield Button(label, id=name, classes=f"tool-button {state_class}")
+                yield Static("ENTER select  ·  ↑↓ move  ·  Q quit", id="tool-help")
         yield Footer()
 
     def on_mount(self) -> None:

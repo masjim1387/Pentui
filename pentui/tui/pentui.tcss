@@ -2,13 +2,21 @@
 Screen { background: transparent; color: white; }
 Header, Footer { background: transparent; color: white; }
 
-#tool-panel { width: 62; height: auto; border: round white; padding: 1 3; margin-top: 3; }
-#brand { content-align: center middle; text-style: bold; margin-bottom: 1; }
+#tool-panel { width: 76; height: auto; border: round ansi_bright_black; padding: 1 3; margin-top: 3; }
+#brand { content-align: left middle; text-style: bold; margin-bottom: 0; }
+#brand-subtitle, #tool-help { color: ansi_bright_black; }
+#brand-subtitle { margin-bottom: 1; }
+#tool-rule { color: ansi_bright_black; margin-bottom: 1; }
+#tool-heading { text-style: bold; margin-bottom: 1; }
 .section-title, .group-title { text-style: bold; margin-top: 1; }
 .coming-soon { color: ansi_bright_black; padding: 0 2; }
 
 Button { width: 100%; margin: 0; padding: 0 1; border: none; background: transparent; color: white; }
-Button:hover, Button:focus { background: transparent; color: white; text-style: reverse bold; }
+Button:hover, Button:focus { background: transparent; color: white; text-style: bold underline; }
+.tool-button { content-align: left middle; height: 1; padding: 0 1; }
+.tool-button.installed { color: white; }
+.tool-button.unavailable { color: ansi_bright_black; }
+#tool-help { margin-top: 1; }
 
 #config-root, #execution-root { height: 1fr; border: round white; margin: 1 2; padding: 1 2; background: transparent; }
 #screen-title { text-style: bold; }
