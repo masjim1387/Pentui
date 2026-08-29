@@ -5,6 +5,11 @@ reconnaissance tools you are authorized to use. It presents each tool's options
 as explained, searchable controls, builds the command safely, shows a live
 preview, and streams the command's output in the terminal.
 
+![PentUI tool-selection screen](assets/pentui-tool-selection.svg)
+
+*PentUI's live tool-selection screen, captured from the application on a system
+where all supported executables are available on `PATH`.*
+
 > **Use only on systems, applications, and networks you own or have explicit
 > permission to assess.** PentUI does not grant permission or make a scan safe
 > for an unauthorized target.
