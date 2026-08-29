@@ -18,6 +18,7 @@ Button:hover, Button:focus { background: transparent; color: white; text-style: 
 #target-input { margin: 1 0; border: tall white; background: transparent; }
 #target-input:focus { border: tall white; background: transparent; text-style: reverse; }
 #output { height: 1fr; border: tall ansi_bright_black; padding: 1; background: transparent; }
+#option-filter { margin: 1 0 0 0; border: tall white; background: transparent; }
 #execution-actions { height: auto; align: right middle; margin-top: 1; }
 #stop-scan { width: 18; border: tall white; }
 

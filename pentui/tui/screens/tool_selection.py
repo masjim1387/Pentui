@@ -19,12 +19,10 @@ class ToolSelectionScreen(Screen[None]):
             with Vertical(id="tool-panel"):
                 yield Label("PENTUI", id="brand")
                 yield Static("SELECT TOOL", classes="section-title")
-                for name in ("nmap", "sqlmap", "subfinder", "httpx", "whatweb"):
+                for name in ("nmap", "sqlmap", "subfinder", "httpx", "whatweb", "ffuf"):
                     tool = self.app.tools[name]
                     status = "✓ installed" if shutil.which(tool.executable) else "✗ not installed"
                     yield Button(f"{tool.display_name}    {status}", id=name)
-                yield Static("FFUF       Coming soon", classes="coming-soon")
-                yield Static("Metasploit Coming soon", classes="coming-soon")
         yield Footer()
 
     def on_mount(self) -> None:

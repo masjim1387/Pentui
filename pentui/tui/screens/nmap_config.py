@@ -28,6 +28,12 @@ class ArgumentButton(Button):
         self.label = self.render_label(selected)
 
 
+class ArgumentGroupLabel(Label):
+    def __init__(self, group: str) -> None:
+        self.argument_group = group
+        super().__init__(group.upper(), classes="group-title")
+
+
 class NmapConfigScreen(Screen[None]):
     BINDINGS = [("escape", "back", "Back"), ("r", "run", "Run"), ("q", "quit", "Quit")]
 
@@ -38,13 +44,14 @@ class NmapConfigScreen(Screen[None]):
             yield Label(f"{tool.display_name.upper()} CONFIGURATION", id="screen-title")
             yield Static("COMMAND", classes="section-title")
             yield Static("", id="command-preview")
+            yield Input(placeholder="Filter options by flag, group, or description", id="option-filter")
             with VerticalScroll(id="arguments"):
                 groups: OrderedDict[str, list[ArgumentDefinition]] = OrderedDict()
                 for argument in tool.arguments:
                     if argument.type != "target":
                         groups.setdefault(argument.group, []).append(argument)
                 for group, arguments in groups.items():
-                    yield Label(group.upper(), classes="group-title")
+                    yield ArgumentGroupLabel(group)
                     for argument in arguments:
                         yield ArgumentButton(argument, self.app.command_state.is_selected(argument))
                 target_arguments = [arg for arg in tool.arguments if arg.type == "target"]
@@ -62,9 +69,26 @@ class NmapConfigScreen(Screen[None]):
         self.query_one(".argument", ArgumentButton).focus()
 
     def on_input_changed(self, event: Input.Changed) -> None:
-        if event.input.id == "target-input":
+        if event.input.id == "option-filter":
+            self.filter_options(event.value)
+        elif event.input.id == "target-input":
             self.app.command_state.set_value(self.app.tool.argument("target"), event.value.strip())
             self.refresh_preview()
+
+    def filter_options(self, query: str) -> None:
+        needle = query.strip().lower()
+        visible_groups: set[str] = set()
+        for button in self.query(ArgumentButton):
+            argument = button.argument
+            haystack = " ".join(
+                (argument.id, argument.flag or "", argument.group, argument.description)
+            ).lower()
+            visible = not needle or needle in haystack
+            button.styles.display = "block" if visible else "none"
+            if visible:
+                visible_groups.add(argument.group)
+        for label in self.query(ArgumentGroupLabel):
+            label.styles.display = "block" if label.argument_group in visible_groups else "none"
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if not isinstance(event.button, ArgumentButton):

@@ -16,7 +16,6 @@ async def run_command(command: list[str]) -> AsyncIterator[str]:
         result = await process.wait()
         yield f"\nProcess exited with code {result}.\n"
     finally:
-        # Cancelling the Textual worker (Q on the output screen) also stops Nmap.
         if process.returncode is None:
             process.terminate()
             await process.wait()

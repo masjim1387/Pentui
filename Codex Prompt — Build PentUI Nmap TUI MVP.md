@@ -4,7 +4,7 @@ You are building the first working version of a terminal-based security tool lau
 
 For this stage, implement **ONLY the Nmap section** and the generic architecture required to support it later.
 
-Do not implement SQLMap, Metasploit, FFUF, Gobuster, Nikto, Hydra, or any other tool yet.
+Do not implement SQLMap, FFUF, Gobuster, Nikto, Hydra, or any other tool yet.
 
 The application must be written in **Python** and use **Textual** for the TUI.
 
@@ -30,7 +30,6 @@ When PentUI starts, show a tool-selection screen:
 │   > Nmap                                                     │
 │     SQLMap              Coming soon                          │
 │     FFUF                Coming soon                          │
-│     Metasploit          Coming soon                          │
 │                                                              │
 ├──────────────────────────────────────────────────────────────┤
 │ ↑↓ Navigate    ENTER Select    Q Quit                        │
@@ -871,7 +870,6 @@ I want a **working Nmap TUI MVP**, not a giant unfinished security framework.
 Do NOT implement:
 
 - SQLMap
-- Metasploit
 - plugin marketplaces
 - automatic installation
 - vulnerability databases

@@ -10,4 +10,5 @@ def main() -> None:
     subfinder = load_tool_definition(definitions_dir / "subfinder.yaml")
     httpx = load_tool_definition(definitions_dir / "httpx.yaml")
     whatweb = load_tool_definition(definitions_dir / "whatweb.yaml")
-    PentUIApp([nmap, sqlmap, subfinder, httpx, whatweb]).run()
+    ffuf = load_tool_definition(definitions_dir / "ffuf.yaml")
+    PentUIApp([nmap, sqlmap, subfinder, httpx, whatweb, ffuf]).run()

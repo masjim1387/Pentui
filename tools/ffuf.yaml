@@ -1,0 +1,61 @@
+name: ffuf
+display_name: FFUF
+executable: ffuf
+arguments:
+  - { id: url, flag: -u, type: string, group: Target, description: "Target URL containing the FUZZ keyword. Scan only assets you are authorized to assess.", placeholder: "https://example.test/FUZZ", required: true }
+  - { id: wordlist, flag: -w, type: filepath, group: Input, description: "Wordlist file; optionally append :KEYWORD for multiple inputs.", placeholder: /usr/share/wordlists/common.txt, required: true }
+  - { id: mode, flag: -mode, type: enum, group: Input, description: "Multiple-wordlist mode: sniper, pitchfork, or clusterbomb.", choices: [sniper, pitchfork, clusterbomb], placeholder: sniper }
+  - { id: extensions, flag: -e, type: string, group: Input, description: "Comma-separated extensions to append to each word.", placeholder: "php,html,txt" }
+  - { id: dirsearch, flag: -D, type: boolean, group: Input, description: "Enable DirSearch wordlist compatibility mode." }
+  - { id: ignore_comments, flag: -ic, type: boolean, group: Input, description: "Ignore comment lines in wordlists." }
+  - { id: encoders, flag: -enc, type: string, group: Input, description: "Apply encoders to keywords, formatted as KEYWORD:encoder.", placeholder: "FUZZ:urlencode" }
+  - { id: request_file, flag: -request, type: filepath, group: Input, description: "Load a raw HTTP request from a file.", placeholder: request.txt }
+  - { id: request_proto, flag: -request-proto, type: enum, group: Input, description: "Protocol to use with a raw request file.", choices: [http, https], placeholder: https }
+  - { id: headers, flag: -H, type: string, group: HTTP Request, description: "Add an HTTP header in Name: Value form.", placeholder: "Authorization: Bearer token" }
+  - { id: method, flag: -X, type: string, group: HTTP Request, description: "HTTP method to use.", placeholder: GET }
+  - { id: cookies, flag: -b, type: string, group: HTTP Request, description: "Cookie data in curl-compatible format.", placeholder: "session=value" }
+  - { id: body, flag: -d, type: string, group: HTTP Request, description: "HTTP request body, typically used with POST/PUT.", placeholder: "key=FUZZ" }
+  - { id: http2, flag: -http2, type: boolean, group: HTTP Request, description: "Use HTTP/2 when the target supports it." }
+  - { id: follow_redirects, flag: -r, type: boolean, group: HTTP Request, description: "Follow HTTP redirects." }
+  - { id: raw, flag: -raw, type: boolean, group: HTTP Request, description: "Do not URL-encode the target URI." }
+  - { id: ignore_body, flag: -ignore-body, type: boolean, group: HTTP Request, description: "Do not download response bodies; useful when matching headers/status only." }
+  - { id: timeout, flag: -timeout, type: integer, group: HTTP Request, description: "Per-request timeout in seconds.", placeholder: "10" }
+  - { id: proxy, flag: -x, type: string, group: HTTP Request, description: "HTTP or SOCKS5 proxy URL.", placeholder: http://127.0.0.1:8080 }
+  - { id: replay_proxy, flag: -replay-proxy, type: string, group: HTTP Request, description: "Send matched requests through this proxy.", placeholder: http://127.0.0.1:8080 }
+  - { id: sni, flag: -sni, type: string, group: HTTP Request, description: "Set TLS SNI name; it must not contain FUZZ.", placeholder: example.test }
+  - { id: recursion, flag: -recursion, type: boolean, group: Recursion, description: "Fuzz discovered directories recursively." }
+  - { id: recursion_depth, flag: -recursion-depth, type: integer, group: Recursion, description: "Maximum recursion depth; 0 means unlimited.", placeholder: "2" }
+  - { id: recursion_strategy, flag: -recursion-strategy, type: enum, group: Recursion, description: "Recursive job strategy.", choices: [default, greedy], placeholder: default }
+  - { id: autocalibration, flag: -ac, type: boolean, group: Calibration, description: "Automatically calibrate response filters to reduce false positives." }
+  - { id: autocalibration_strings, flag: -acc, type: string, group: Calibration, description: "Custom calibration strings; implies autocalibration.", placeholder: "admin,login" }
+  - { id: per_host_calibration, flag: -ach, type: boolean, group: Calibration, description: "Calibrate separately for each host." }
+  - { id: match_codes, flag: -mc, type: string, group: Matchers, description: "Match these status codes or ranges.", placeholder: "200,204,301,302,307,401,403,405,500" }
+  - { id: match_lines, flag: -ml, type: string, group: Matchers, description: "Match response line counts or ranges.", placeholder: "1-20" }
+  - { id: match_regex, flag: -mr, type: string, group: Matchers, description: "Match responses using this regular expression.", placeholder: "admin" }
+  - { id: match_size, flag: -ms, type: string, group: Matchers, description: "Match response byte sizes or ranges.", placeholder: "0-5000" }
+  - { id: match_words, flag: -mw, type: string, group: Matchers, description: "Match response word counts or ranges.", placeholder: "1-50" }
+  - { id: matcher_mode, flag: -mmode, type: enum, group: Matchers, description: "Combine matchers with AND or OR.", choices: [and, or], placeholder: or }
+  - { id: filter_codes, flag: -fc, type: string, group: Filters, description: "Filter out these status codes or ranges.", placeholder: "404" }
+  - { id: filter_lines, flag: -fl, type: string, group: Filters, description: "Filter out response line counts or ranges.", placeholder: "0" }
+  - { id: filter_regex, flag: -fr, type: string, group: Filters, description: "Filter out responses matching this regular expression.", placeholder: "not found" }
+  - { id: filter_size, flag: -fs, type: string, group: Filters, description: "Filter out response byte sizes or ranges.", placeholder: "4242" }
+  - { id: filter_words, flag: -fw, type: string, group: Filters, description: "Filter out response word counts or ranges.", placeholder: "0" }
+  - { id: filter_mode, flag: -fmode, type: enum, group: Filters, description: "Combine filters with AND or OR.", choices: [and, or], placeholder: or }
+  - { id: threads, flag: -t, type: integer, group: Performance, description: "Number of concurrent worker threads.", placeholder: "40" }
+  - { id: rate, flag: -rate, type: integer, group: Performance, description: "Maximum requests per second; 0 is unlimited.", placeholder: "0" }
+  - { id: delay, flag: -p, type: string, group: Performance, description: "Delay between requests; accepts a fixed value or range in seconds.", placeholder: "0.1-0.5" }
+  - { id: maxtime, flag: -maxtime, type: integer, group: Performance, description: "Maximum total run time in seconds.", placeholder: "300" }
+  - { id: maxtime_job, flag: -maxtime-job, type: integer, group: Performance, description: "Maximum run time per recursive job in seconds.", placeholder: "60" }
+  - { id: stop_all_errors, flag: -sa, type: boolean, group: Performance, description: "Stop on all error conditions." }
+  - { id: stop_spurious_errors, flag: -se, type: boolean, group: Performance, description: "Stop when spurious error rates are detected." }
+  - { id: stop_403, flag: -sf, type: boolean, group: Performance, description: "Stop when a wall of HTTP 403 responses is detected." }
+  - { id: output, flag: -o, type: filepath, group: Output, description: "Write matched results to this file.", placeholder: ffuf.json }
+  - { id: output_dir, flag: -od, type: filepath, group: Output, description: "Store matched HTTP responses in this directory.", placeholder: ffuf-output }
+  - { id: output_format, flag: -of, type: enum, group: Output, description: "Output file format.", choices: [json, ejson, html, md, csv, ecsv], placeholder: json }
+  - { id: json, flag: -json, type: boolean, group: Output, description: "Write newline-delimited JSON to standard output." }
+  - { id: silent, flag: -s, type: boolean, group: Output, description: "Suppress banner and non-result terminal output." }
+  - { id: verbose, flag: -v, type: boolean, group: Output, description: "Show the full URL and redirect location for each result." }
+  - { id: debug_log, flag: -debug-log, type: filepath, group: Output, description: "Write FFUF internal debug logging to this file.", placeholder: ffuf-debug.log }
+  - { id: audit_log, flag: -audit-log, type: filepath, group: Output, description: "Write every request, response, and run configuration to this file.", placeholder: ffuf-audit.json }
+  - { id: noninteractive, flag: -noninteractive, type: boolean, group: General, description: "Disable FFUF's interactive console." }
+  - { id: config, flag: -config, type: filepath, group: General, description: "Load FFUF options from this configuration file.", placeholder: ffufrc }
